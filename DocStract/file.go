@@ -61,9 +61,16 @@ func (d *DocStract) getName() {
 		nameChunk = 2
 	default: //html
 		nameChunk = 0
-		if strings.Contains(chunks[0], "word") {
-			nameChunk = 7
-		} //docx
+		switch {
+		case strings.Contains(chunks[0], "word"): //docx
+			nameChunk = 8
+			break
+		case strings.Contains(chunks[2], "worksheets"): //xlsx
+			nameChunk = 15
+			break
+		default: //html
+			nameChunk = 0
+		}
 	}
 
 	for i := nameChunk + 1; i < len(chunks); i++ {
@@ -78,8 +85,6 @@ func (d *DocStract) getName() {
 
 	name = StripSeperators(name)
 	t = StripSeperators(t)
-	//logrus.Info(chunks)
-	//logrus.Info(chunks[nameChunk], ":", chunks[typeChunk])
 
 	switch {
 	case strings.Contains(t, "pdf"):
@@ -88,16 +93,17 @@ func (d *DocStract) getName() {
 		d.Type = DocPDF
 		break
 
-	case strings.Contains(t, "doc"):
+	case strings.Contains(t, "docx"):
 		name += ".docx"
-		name = name[4:]
+		name = name[3:]
 		d.Type = DocX
 		break
 
-	/*case strings.Contains(t, "xl"):
-	name += ".xlsx"
-	d.Type = DocXLSX
-	break*/
+	case strings.Contains(t, "xlsx"):
+		name += ".xlsx"
+		name = name[3:]
+		d.Type = DocXLSX
+		break
 
 	case strings.Contains(t, "htm"):
 		name += ".html"
