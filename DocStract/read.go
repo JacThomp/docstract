@@ -7,7 +7,6 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/richardlehane/mscfb"
-	"github.com/sirupsen/logrus"
 )
 
 //Extract takes a .msg files binary data and returns an array of attachments and a count of how many files were extracted
@@ -55,7 +54,6 @@ func Extract(data []byte) (*[]*DocStract, int, error) {
 			wait.Add(1)
 			go func(d *DocStract) {
 				d.getName()
-				logrus.Info(d.Type, ":", *(d.FileName))
 				wait.Done()
 			}(doc)
 		}
