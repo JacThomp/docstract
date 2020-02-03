@@ -1,6 +1,8 @@
 package DocStract
 
 import (
+	"errors"
+	"io/ioutil"
 	"strings"
 )
 
@@ -26,6 +28,19 @@ type DocStract struct {
 	Type     DocType
 	FileName *string
 	Bytes    []byte
+}
+
+//Saves the file to the path, does not check if it's an unkown filetype only if it has a name
+func (d *DocStract) SaveFile(path string) error {
+	if len(path) > 0 && path[len(path)-1] != '/' {
+		path += "/"
+	}
+
+	if d.FileName == nil {
+		return errors.New("document does not have a filename cannot save")
+	}
+
+	return ioutil.WriteFile(path+*(d.FileName), d.Bytes, 0644)
 }
 
 //sets name to nil if cannot dertermine name and type to unkown

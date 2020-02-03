@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"main/DocStract"
+
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -20,10 +22,9 @@ func main() {
 
 	fmt.Println("Found ", count, " files what can we do with these?")
 
-	for a, binaryData := range *files {
-		err := ioutil.WriteFile(fmt.Sprintf("%d.pdf", a), binaryData.Bytes, 0644)
-		if err != nil {
-			panic(err)
+	for _, document := range *files {
+		if err := document.SaveFile(""); err != nil {
+			logrus.Warn(err)
 		}
 	}
 }
