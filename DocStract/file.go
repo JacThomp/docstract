@@ -45,7 +45,7 @@ func (d *DocStract) getName() {
 	}
 
 	for i := nameChunk + 1; i < len(chunks); i++ {
-		if len(chunks[i]) != 0 {
+		if len(chunks[i]) > 1 {
 			typeChunk = i
 			break
 		}
