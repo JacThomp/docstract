@@ -2,8 +2,6 @@ package DocStract
 
 import (
 	"strings"
-
-	"github.com/sirupsen/logrus"
 )
 
 //DocType is a wrapper for the type iota/enum
@@ -53,11 +51,9 @@ func (d *DocStract) getName() {
 
 	name := strings.TrimSpace(chunks[nameChunk])
 	t := strings.TrimSpace(chunks[typeChunk])
-	logrus.Info(name, ":", t, "::", len(chunks))
 
-	/*name = StripSeperators(name)
+	name = StripSeperators(name)
 	t = StripSeperators(t)
-	logrus.Info(name, ":", t)*/
 
 	if strings.Contains(t, "pdf") {
 		name += ".pdf"

@@ -4,9 +4,14 @@ func StripSeperators(s string) string {
 	iBytes := []byte(s)
 	oBytes := []byte{}
 
-	for _, b := range iBytes {
-		if b != '0' {
-			oBytes = append(oBytes, b)
+	if len(iBytes) >= 3 {
+		offset := 0
+		if iBytes[0] == iBytes[2] && iBytes[0] == byte(0) {
+			offset = 1
+		}
+
+		for i := offset; i < len(iBytes); i += 2 {
+			oBytes = append(oBytes, iBytes[i])
 		}
 	}
 
