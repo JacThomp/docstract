@@ -66,7 +66,12 @@ func (d *DocStract) getName() {
 			nameChunk = 8
 			break
 		case strings.Contains(chunks[2], "worksheets"): //xlsx
-			nameChunk = 15
+			for i := 3; i < len(chunks); i++ {
+				if strings.Contains(StripSeperators(chunks[i]), "xlsx") {
+					nameChunk = i + 1
+					break
+				}
+			}
 			break
 		default: //html
 			nameChunk = 0
@@ -101,8 +106,16 @@ func (d *DocStract) getName() {
 
 	case strings.Contains(t, "xlsx"):
 		name += ".xlsx"
+		head := 0
+		for i, b := range d.Bytes {
+			if i+1 < len(d.Bytes) && b == 'P' && d.Bytes[i+1] == 'K' {
+				head = i
+				break
+			}
+		}
 		name = name[3:]
 		d.Type = DocXLSX
+		d.Bytes = d.Bytes[head:]
 		break
 
 	case strings.Contains(t, "htm"):
