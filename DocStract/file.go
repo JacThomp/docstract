@@ -16,6 +16,9 @@ const (
 
 	//DocX represents a microsoft docx document type
 	DocX
+
+	//DocHTML represents an html document type
+	DocHTML
 )
 
 //DocStract stores the binary data for extracted files, as well as the type and filename metadata
@@ -55,9 +58,14 @@ func (d *DocStract) getName() {
 	name = StripSeperators(name)
 	t = StripSeperators(t)
 
-	if strings.Contains(t, "pdf") {
+	switch {
+	case strings.Contains(t, "pdf"):
 		name += ".pdf"
 		d.Type = DocPDF
+
+	case strings.Contains(t, "htm"):
+		name += ".html"
+		d.Type = DocHTML
 	}
 
 	d.FileName = &name
