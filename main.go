@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"main/DocStract"
 	"os"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 )
@@ -17,6 +18,7 @@ func main() {
 		if file.Name()[len(file.Name())-4:] != ".msg" {
 			continue
 		}
+		logrus.Infof("reading %s", file.Name())
 
 		data, err := ioutil.ReadFile(file.Name())
 
@@ -31,7 +33,12 @@ func main() {
 
 		fmt.Println("Found ", count, " files")
 
-		for _, document := range *files {
+		for i, document := range *files {
+			if !strings.Contains(*document.FileName, ".") {
+				s := fmt.Sprintf("%d.txt", i)
+				document.FileName = &s
+			}
+
 			if err := document.SaveFile(""); err != nil {
 				logrus.Warn(err)
 			} else {

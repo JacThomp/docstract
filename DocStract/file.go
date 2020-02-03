@@ -19,6 +19,9 @@ const (
 	//DocX represents a microsoft docx document type
 	DocX
 
+	//DocXLSX represents microsoft excel doc
+	DocXLSX
+
 	//DocHTML represents an html document type
 	DocHTML
 )
@@ -58,6 +61,9 @@ func (d *DocStract) getName() {
 		nameChunk = 2
 	default: //html
 		nameChunk = 0
+		if strings.Contains(chunks[0], "word") {
+			nameChunk = 7
+		} //docx
 	}
 
 	for i := nameChunk + 1; i < len(chunks); i++ {
@@ -72,15 +78,31 @@ func (d *DocStract) getName() {
 
 	name = StripSeperators(name)
 	t = StripSeperators(t)
+	//logrus.Info(chunks)
+	//logrus.Info(chunks[nameChunk], ":", chunks[typeChunk])
 
 	switch {
 	case strings.Contains(t, "pdf"):
 		name += ".pdf"
+		name = name[3:]
 		d.Type = DocPDF
+		break
+
+	case strings.Contains(t, "doc"):
+		name += ".docx"
+		name = name[4:]
+		d.Type = DocX
+		break
+
+	/*case strings.Contains(t, "xl"):
+	name += ".xlsx"
+	d.Type = DocXLSX
+	break*/
 
 	case strings.Contains(t, "htm"):
 		name += ".html"
 		d.Type = DocHTML
+		break
 	}
 
 	d.FileName = &name
