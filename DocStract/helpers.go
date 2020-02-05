@@ -1,5 +1,6 @@
-package DocStract
+package docstract
 
+//StripSeperators removes all the random 0 bytes
 func StripSeperators(s string) string {
 	iBytes := []byte(s)
 	oBytes := []byte{}

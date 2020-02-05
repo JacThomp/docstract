@@ -1,4 +1,4 @@
-package DocStract
+package docstract
 
 import (
 	"bytes"

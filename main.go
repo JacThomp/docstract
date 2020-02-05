@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"main/DocStract"
+	docstract "main/DocStract"
 	"os"
 	"strings"
 
@@ -26,7 +26,7 @@ func main() {
 			panic(err)
 		}
 
-		files, count, err := DocStract.Extract(data)
+		files, count, err := docstract.Extract(data)
 		if err != nil {
 			panic(err)
 		}

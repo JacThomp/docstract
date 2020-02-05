@@ -1,4 +1,4 @@
-package DocStract
+package docstract
 
 import (
 	"errors"
@@ -33,7 +33,7 @@ type DocStract struct {
 	Bytes    []byte
 }
 
-//Saves the file to the path, does not check if it's an unkown filetype only if it has a name
+//SaveFile saves the file to the path, does not check if it's an unkown filetype only if it has a name
 func (d *DocStract) SaveFile(path string) error {
 	if len(path) > 0 && path[len(path)-1] != '/' {
 		path += "/"
@@ -54,18 +54,20 @@ func (d *DocStract) getName() {
 	chunks := strings.Split(nameBlock, ".")
 
 	nameChunk := 0
-	typeChunk := 0
+	t := DocUnkown
 
 	switch len(chunks[0]) {
 	case 0: //pdf
+		t = DocPDF
 		nameChunk = 2
 	default: //html
-		nameChunk = 0
 		switch {
 		case strings.Contains(chunks[0], "word"): //docx
 			nameChunk = 8
+			t = DocX
 			break
 		case strings.Contains(chunks[2], "worksheets"): //xlsx
+			t = DocXLSX
 			for i := 3; i < len(chunks); i++ {
 				if strings.Contains(StripSeperators(chunks[i]), "xlsx") {
 					nameChunk = i + 1
@@ -74,37 +76,25 @@ func (d *DocStract) getName() {
 			}
 			break
 		default: //html
-			nameChunk = 0
-		}
-	}
-
-	for i := nameChunk + 1; i < len(chunks); i++ {
-		if len(chunks[i]) > 1 {
-			typeChunk = i
-			break
+			t = DocHTML
 		}
 	}
 
 	name := strings.TrimSpace(chunks[nameChunk])
-	t := strings.TrimSpace(chunks[typeChunk])
-
 	name = StripSeperators(name)
-	t = StripSeperators(t)
 
-	switch {
-	case strings.Contains(t, "pdf"):
+	switch t {
+	case DocPDF:
 		name += ".pdf"
 		name = name[3:]
 		d.Type = DocPDF
-		break
 
-	case strings.Contains(t, "docx"):
+	case DocX:
 		name += ".docx"
 		name = name[3:]
 		d.Type = DocX
-		break
 
-	case strings.Contains(t, "xlsx"):
+	case DocXLSX:
 		name += ".xlsx"
 		head := 0
 		for i, b := range d.Bytes {
@@ -116,12 +106,10 @@ func (d *DocStract) getName() {
 		name = name[3:]
 		d.Type = DocXLSX
 		d.Bytes = d.Bytes[head:]
-		break
 
-	case strings.Contains(t, "htm"):
+	case DocHTML:
 		name += ".html"
 		d.Type = DocHTML
-		break
 	}
 
 	d.FileName = &name
