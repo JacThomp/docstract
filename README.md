@@ -7,5 +7,5 @@ import "github.com/jacthomp/DocStract"
 func main(){
   file, _ := ioutil.ReadFile("x.msg")
   
-  files, count, err := DocStract.Extract(file)
+  files, count, err := docstract.Extract(file)
 }
